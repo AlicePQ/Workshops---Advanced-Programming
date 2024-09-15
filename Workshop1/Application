@@ -1,0 +1,151 @@
+"""
+This programm shows a Electronics Store Catalog
+
+Copyright (C) 2024  Alicia Pineda Quiroga <apinedaq@udistrital.edu.co>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+
+
+class Catalog:
+    """Class to represent a catalog of electronic devices."""
+
+    def __init__(self):
+        # Categories and their respective products and quantities
+        self.categories = {
+            "Computers": {
+                "products": ["Mac", "Lenovo", "Acer", "Asus"],
+                "quantities": [20, 15, 20, 45]
+            },
+            "Smartphones": {
+                "products": ["iPhone 14 Pro", "Samsung Galaxy S22 Ultra", "Xiaomi Mi 11 Ultra", "OnePlus 10 Pro"],
+                "quantities": [20, 15, 20, 45]
+            },
+            "Cameras": {
+                "products": ["Nikon Z7 II", "Sony Alpha A7 IV", "Fujifilm X-T4", "Panasonic Lumix GH6"],
+                "quantities": [12, 45, 23, 41]
+            }
+        
+        }
+
+    def show_categories(self):
+        """Displays the available categories."""
+        print("Available categories:")
+        for category in self.categories:
+            print(f"- {category}")
+
+    def show_products_by_category(self, category):
+        """Displays products and their quantities for a given category."""
+        if category in self.categories:
+            print(f"Products in {category}:")
+            products = self.categories[category]["products"]
+            quantities = self.categories[category]["quantities"]
+            for i, product in enumerate(products):
+                print(f"{i+1}. {product} - {quantities[i]} units available")
+        else:
+            print("Category not found.")
+
+class ShoppingCart:
+    """Class to represent a shopping cart."""
+
+    def __init__(self):
+        # A dictionary to store items and their quantities
+        self.cart = {}
+
+    def add_to_cart(self, category, product, quantity):
+        """Adds a product to the shopping cart."""
+        if (category, product) in self.cart:
+            self.cart[(category, product)] += quantity
+        else:
+            self.cart[(category, product)] = quantity
+
+    def show_cart(self):
+        """Displays the content of the shopping cart."""
+        print("Shopping Cart:")
+        if not self.cart:
+            print("Your cart is empty.")
+        else:
+            for (category, product), quantity in self.cart.items():
+                print(f"{product} ({category}) - {quantity} units")
+
+class Checkout:
+    """Class to handle the checkout process."""
+
+    def __init__(self):
+        self.customer_info = {}
+
+    def get_customer_info(self):
+        """Collects customer information for delivery."""
+        print("Please enter your delivery information:")
+        self.customer_info["name"] = input("Name: ")
+        self.customer_info["address"] = input("Address: ")
+        self.customer_info["phone"] = input("Phone: ")
+
+    def show_customer_info(self):
+        """Displays the collected customer information."""      
+        print("Customer Information:")
+        for key, value in self.customer_info.items():
+            print(f"{key.capitalize()}: {value}")
+
+# Command-line interface to interact with the user
+def main():
+    catalog = Catalog()
+    cart = ShoppingCart()
+    checkout = Checkout()
+
+    while True:
+        print("\nWelcome to the Electronics Store")
+        print("1. Show categories")
+        print("2. Show products by category")
+        print("3. Add product to cart")
+        print("4. View cart")
+        print("5. Checkout")
+        print("6. Exit")
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            catalog.show_categories()
+
+        elif choice == "2":
+            category = input("Enter a category: ")
+            catalog.show_products_by_category(category)
+
+        elif choice == "3":
+            category = input("Enter a category: ")
+            product_index = int(input("Enter product number: ")) - 1
+            quantity = int(input("Enter quantity: "))
+            if category in catalog.categories:
+                product = catalog.categories[category]["products"][product_index]
+                cart.add_to_cart(category, product, quantity)
+                print(f"{quantity} units of {product} added to the cart.")
+            else:
+                print("Category not found.")
+
+        elif choice == "4":
+            cart.show_cart()
+
+        elif choice == "5":
+            checkout.get_customer_info()
+            checkout.show_customer_info()
+
+        elif choice == "6":
+            print("Thank you for shopping with us!")
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    main()
