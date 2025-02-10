@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
 class Catalog:
     """Class to represent a catalog of electronic devices."""
 
@@ -42,6 +40,7 @@ class Catalog:
 
     def show_categories(self):
         """Displays the available categories."""
+
         print("Available categories:")
         for category in self.categories:
             print(f"- {category}")
