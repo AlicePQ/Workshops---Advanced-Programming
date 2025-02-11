@@ -1,6 +1,6 @@
 """
 This module contains a set of classes to handle
-electronic devices using categories, selecting products, and adding them to the cart
+electronic devices using categories, searchs, 
 among others functionalities.
 
 Author:Alicia Pineda Quiroga <apinedaq@udistrital.edu.co>
@@ -99,9 +99,19 @@ def main():
         elif choice == "3":
             cart.show_cart()
             while True:
-                print("1. Back to main menu")
+                print("1. Complete Checkout")
+                print("2. Back to main menu")
                 answer = input("Choose an option: ")
                 if answer == "1":
+                    checkout.get_customer_info()
+                    print("Delivery confirmation:\n")
+                    checkout.show_customer_info()
+                    print("Electronic devices selected: \n")
+                    cart.show_cart()
+                    print("Thank you for shopping with us!\n")
+                    break
+
+                elif answer == "2":
                     break
 
         elif choice == "4":
@@ -116,18 +126,12 @@ def main():
                     checkout.show_customer_info()
                     print("Electronic devices selected: \n")
                     cart.show_cart()
-                    while True:
-                        print("1. Check order status")
-                        print("2. Back to main menu")
-                        answer = input("Choose an option: ")
-                        if answer == "1":
-                              print(checkout.get_order_status(cart))
-                        elif answer == "2":
-                            break
+                    print("Thank you for shopping with us!\n")
+                    break  
 
                 elif answer == "2":
                     break
-                
+            
         elif choice == "5":
             print("Thank you for shopping with us!")
             break

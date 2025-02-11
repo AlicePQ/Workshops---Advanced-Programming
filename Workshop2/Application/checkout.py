@@ -1,6 +1,5 @@
 """
-This module contains a class to define the Purchase confirmation and the User information to
-collect for delivery in the application, you must have flask installed in your system.
+This module contains a class to define the delivery user information in the application.
 
 Author: Alicia Pineda Quiroga <apinedaq@udistrital.edu.co>
 
@@ -20,9 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Workshop_3_AP-UD. If not, see <https://www.gnu.org/licenses/>. 
 """
 
-from shoppingCart import ShoppingCart
-import re
-from flask import Flask, request, jsonify
+import re 
 
 class Checkout:
     """Class to handle the checkout process."""
@@ -30,7 +27,6 @@ class Checkout:
     def __init__(self):
         """Initializes the Checkout class with an empty customer_info dictionary."""
         self.customer_info = {}
-        self.order_status = None
 
     def get_customer_info(self):
         """Collects customer information for delivery."""
@@ -86,70 +82,3 @@ class Checkout:
         bool: True if the phone number is valid, False otherwise.
         """
         return re.match(r'^\+?1?\d{9,15}$', value) is not None
-
-    def get_order_status(self, shopping_cart):
-        """
-        Returns the order status and the shopping cart information.
-
-        Parameters:
-        shopping_cart (ShoppingCart): The shopping cart instance.
-
-        Returns:
-        dict: The order status and shopping cart information.
-        """
-        return {
-            "customer_info": self.customer_info,
-            "order_status": self.order_status,
-            "cart": shopping_cart.show_cart()
-        }
-
-# Flask app setup-----------------------------------------------------------
-app = Flask(__name__)
-checkout = Checkout()
-shopping_cart = ShoppingCart()
-
-@app.route('/checkout', methods=['POST'])
-def checkout_process():
-    """
-    Web service to handle the checkout process.
-
-    Endpoint: /checkout
-    HTTP Method: POST
-    Inputs: user_id, address, payment_method
-    Outputs: Confirmation of purchase and delivery details
-    """
-    data = request.get_json()
-    user_id = data.get('user_id')
-    address = data.get('address')
-    payment_method = data.get('payment_method')
-
-    if not user_id or not address or not payment_method:
-        return jsonify({"error": "Missing required fields"}), 400
-
-    # Process the checkout (this is a placeholder, you can add your own logic here)
-    checkout.order_status = {
-        "message": "Purchase confirmed",
-        "user_id": user_id,
-        "address": address,
-        "payment_method": payment_method,
-        "delivery_details": "Your order will be delivered in 3-5 business days."
-    }
-
-    return jsonify(checkout.order_status), 200
-
-@app.route('/checkout/status', methods=['GET'])
-def get_order_status():
-    """
-    Web service to get the order status and shopping cart information.
-
-    Endpoint: /checkout/status
-    HTTP Method: GET
-    Inputs: None
-    Outputs: Order status and shopping cart information
-    """
-    status = checkout.get_order_status(shopping_cart)
-    return jsonify(status)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-

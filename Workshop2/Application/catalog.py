@@ -1,7 +1,7 @@
 """
 This module contains a class to handle a catalog including some 
-search methods and a web server with Flask to manage the catalog,
-you must have flask installed in your system.
+search methods.
+
 Author: Alicia Pineda Quiroga <apinedaq@udistrital.edu.co>
 
 This file is part of Workshop_3_AP-UD.
@@ -19,8 +19,6 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License 
 along with Workshop_3_AP-UD. If not, see <https://www.gnu.org/licenses/>. 
 """
-
-from flask import Flask, jsonify
 
 class Catalog:
     """Class to represent a catalog of electronic devices."""
@@ -73,74 +71,3 @@ class Catalog:
             for product in category["products"]:
                 print(f"{product_number}. {product}")
                 product_number += 1
-
-    def get_all_products(self):
-        """Returns a list of all products with details."""
-        products_list = []
-        product_id = 1
-        for category_name, category in self.categories.items():
-            for i, product in enumerate(category["products"]):
-                products_list.append({
-                    "id": product_id,
-                    "name": product,
-                    "price": 100 + i * 10,  # Example price
-                    "stock": category["quantities"][i],
-                    "category": category_name,
-                    "description": f"{product} description"
-                })
-                product_id += 1
-        return products_list
-
-    def get_products_by_category(self, category_name):
-        """Returns a list of products for a given category."""
-        if category_name in self.categories:
-            category = self.categories[category_name]
-            products_list = []
-            for i, product in enumerate(category["products"]):
-                products_list.append({
-                    "id": i + 1,
-                    "name": product,
-                    "price": 100 + i * 10,  # Example price
-                    "stock": category["quantities"][i],
-                    "category": category_name,
-                    "description": f"{product} description"
-                })
-            return products_list
-        else:
-            return None
-
-# Flask app setup
-app = Flask(__name__)
-catalog = Catalog()
-
-@app.route('/products', methods=['GET'])
-def get_all_products():
-    """
-    Web service to get all products.
-
-    Endpoint: /products
-    HTTP Method: GET
-    Inputs: None
-    Outputs: List of products with details (ID, name, price, stock, category, description)
-    """
-    products = catalog.get_all_products()
-    return jsonify(products)
-
-@app.route('/products/category/<category_name>', methods=['GET'])
-def get_products_by_category(category_name):
-    """
-    Web service to get products by category.
-
-    Endpoint: /products/category/<category_name>
-     HTTP Method: GET
-    Inputs: category_name (name of the category)
-    Outputs: List of products in that category
-    """
-    products = catalog.get_products_by_category(category_name)
-    if products is not None:
-        return jsonify(products)
-    else:
-        return jsonify({"error": "Category not found"}), 404
-
-if __name__ == '__main__':
-    app.run(debug=True)
